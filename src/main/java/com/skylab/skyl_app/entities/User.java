@@ -1,6 +1,7 @@
 package com.skylab.skyl_app.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -35,6 +36,7 @@ public class User implements UserDetails {
     private String email;
 
     @Column(name = "password")
+    @JsonIgnore
     private String password;
 
     @Column(name = "is_enabled")
@@ -48,10 +50,10 @@ public class User implements UserDetails {
     private Set<Role> authorities;
 
     @OneToMany(mappedBy = "user")
-    @JsonBackReference
+    @JsonIgnore
     private List<EmailActivation> emailActivations;
 
-    @JsonManagedReference
+    @JsonIgnore
     @OneToMany(mappedBy = "createdBy")
     private List<Url> urls;
 

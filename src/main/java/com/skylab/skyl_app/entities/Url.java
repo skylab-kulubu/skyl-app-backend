@@ -32,7 +32,6 @@ public class Url {
 
     @ManyToOne
     @JoinColumn(name = "created_by_id")
-    @JsonManagedReference
     private User createdBy;
 
     @Column(name = "expiration_date")
