@@ -6,9 +6,11 @@ import com.skylab.skyl_app.core.exceptions.AliasAlreadyExistsException;
 import com.skylab.skyl_app.core.exceptions.UrlNotFoundException;
 import com.skylab.skyl_app.dataAccess.UrlDao;
 import com.skylab.skyl_app.entities.Url;
+import com.skylab.skyl_app.entities.User;
 import com.skylab.skyl_app.entities.dtos.UrlShortenDto;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,7 +30,7 @@ public class UrlManager implements UrlService {
         Optional<Url> url = urlDao.findByAlias(alias);
 
         if (!url.isPresent()){
-            throw new UrlNotFoundException(alias+ " named url not found");
+            return new Url(0, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", "rickroll", 0,  new User(), null);
         }
 
         url.get().setClickCount(url.get().getClickCount() + 1);
@@ -49,11 +51,46 @@ public class UrlManager implements UrlService {
             urlShortenDto.setAlias(generateRandomAlias());
         }
 
+        if (checkIfUrlHasProtocol(urlShortenDto.getUrl())) {
+            urlShortenDto.setUrl("https://" + urlShortenDto.getUrl());
+        }
+
         Url url = new Url();
         url.setAlias(urlShortenDto.getAlias());
         url.setUrl(urlShortenDto.getUrl());
         url.setClickCount(0);
         url.setCreatedBy(loggedInUser);
+
+        return urlDao.save(url);
+    }
+
+    private boolean checkIfUrlHasProtocol(String url) {
+        return !url.startsWith("http://") && !url.startsWith("https://");
+    }
+
+    @Override
+    public List<Url> getAllUrls() {
+        var urls = urlDao.findAll();
+
+        if (urls.isEmpty()) {
+            throw new UrlNotFoundException("No urls found");
+        }
+
+        return urls;
+    }
+
+    @Override
+    public Url updateUrl(int urlId, UrlShortenDto urlShortenDto) {
+        var urlResult = urlDao.findById(urlId);
+
+        if (urlResult.isEmpty()) {
+            throw new UrlNotFoundException("Url not found");
+        }
+
+        var url = urlResult.get();
+
+        url.setAlias(urlShortenDto.getAlias().isEmpty() ? url.getAlias() : urlShortenDto.getAlias());
+        url.setUrl(urlShortenDto.getUrl().isEmpty() ? url.getUrl() : urlShortenDto.getUrl());
 
         return urlDao.save(url);
     }

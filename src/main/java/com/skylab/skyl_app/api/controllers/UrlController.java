@@ -2,39 +2,30 @@ package com.skylab.skyl_app.api.controllers;
 
 import com.skylab.skyl_app.business.abstracts.UrlService;
 import com.skylab.skyl_app.entities.dtos.UrlShortenDto;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import static org.springframework.http.HttpStatus.MOVED_PERMANENTLY;
-
 @RestController
-@RequestMapping("/")
+@RequestMapping("/urls")
 public class UrlController {
 
     private final UrlService urlService;
+
 
     public UrlController(UrlService urlService) {
         this.urlService = urlService;
     }
 
-    @GetMapping("/{alias}")
-    public ResponseEntity<?> handleRedirect(@PathVariable String alias, HttpServletResponse response) throws URISyntaxException, IOException {
-        var result = urlService.redirect(alias);
+    @GetMapping("/getAllUrls")
+    public ResponseEntity<?> getAllUrls() {
+        var result = urlService.getAllUrls();
 
-        response.sendRedirect(result.getUrl());
-
-        return new ResponseEntity<>(MOVED_PERMANENTLY);
+        return ResponseEntity.ok(result);
     }
 
-    @PostMapping("/shorten")
-    public ResponseEntity<?> shortenUrl(@RequestBody UrlShortenDto urlShortenDto) {
-        var result = urlService.shorten(urlShortenDto);
+    @PutMapping("/updateUrl/{urlId}")
+    public ResponseEntity<?> updateUrl(@PathVariable int urlId, @RequestBody UrlShortenDto urlShortenDto) {
+       var result = urlService.updateUrl(urlId, urlShortenDto);
 
         return ResponseEntity.ok(result);
     }

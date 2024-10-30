@@ -40,7 +40,7 @@ public class User implements UserDetails {
     private String password;
 
     @Column(name = "is_enabled")
-    private boolean enabled;
+    private boolean enabled = false;
 
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
