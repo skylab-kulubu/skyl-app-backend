@@ -47,6 +47,7 @@ public class SecurityConfig {
                                 .requestMatchers("/emailActivations/**").permitAll()
                                 .requestMatchers("/shorten").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/urls/getOriginalUrl/**").permitAll()
+                                .requestMatchers("/urls/getUserUrls").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/urls/**").hasAnyRole("ADMIN")
 
 
