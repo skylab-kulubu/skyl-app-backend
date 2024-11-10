@@ -42,7 +42,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(x ->
                         x
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                                .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/auth/login").permitAll()
+                                .requestMatchers("/auth/register").hasAnyRole("ADMIN")
                                 .requestMatchers("/emailActivations/**").permitAll()
                                 .requestMatchers("/shorten").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/urls/getOriginalUrl/**").permitAll()
