@@ -29,8 +29,13 @@ public class UrlManager implements UrlService {
     public Url redirect(String alias) {
         Optional<Url> url = urlDao.findByAlias(alias);
 
+
         if (!url.isPresent()){
+            /*
             return new Url(0, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", "rickroll", 0,  new User(), null);
+
+             */
+           throw new UrlNotFoundException("Url not found");
         }
 
         url.get().setClickCount(url.get().getClickCount() + 1);
@@ -93,6 +98,19 @@ public class UrlManager implements UrlService {
         url.setUrl(urlShortenDto.getUrl().isEmpty() ? url.getUrl() : urlShortenDto.getUrl());
 
         return urlDao.save(url);
+    }
+
+    @Override
+    public List<Url> getUserUrls() {
+        var loggedInUser = userService.getLoggedInUser();
+
+        var urls = urlDao.findAllByCreatedBy(loggedInUser);
+
+        if (urls.isEmpty()) {
+            throw new UrlNotFoundException("No urls found");
+        }
+
+        return urls;
     }
 
     private String generateRandomAlias() {

@@ -29,4 +29,18 @@ public class UrlController {
 
         return ResponseEntity.ok(result);
     }
+
+    @GetMapping("/getUserUrls")
+    public ResponseEntity<?> getUserUrls() {
+        var result = urlService.getUserUrls();
+
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/getOriginalUrl/{alias}")
+    public ResponseEntity<?> getOriginalUrl(@PathVariable String alias) {
+        var result = urlService.redirect(alias);
+
+        return ResponseEntity.ok(result);
+    }
 }

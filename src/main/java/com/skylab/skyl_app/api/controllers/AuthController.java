@@ -22,7 +22,7 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto){
         var result = authService.login(loginDto);
         return ResponseEntity.ok(result);

@@ -16,4 +16,7 @@ public interface UrlService {
     List<Url> getAllUrls();
 
     Url updateUrl(int urlId, UrlShortenDto urlShortenDto);
+
+    List<Url> getUserUrls();
+
 }
