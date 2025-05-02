@@ -3,6 +3,7 @@ package com.skylab.skyl_app.business.abstracts;
 import com.skylab.skyl_app.entities.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserService extends UserDetailsService {
@@ -20,5 +21,7 @@ public interface UserService extends UserDetailsService {
     boolean checkIfUserExistsByMail(String email);
 
     User getLoggedInUser();
+
+    List<Optional<User>> getUsers();
 
 }

@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -85,6 +86,16 @@ public class UserManager implements UserService {
 
         var userMail = authentication.getName();
         return getUserByEmail(userMail).get();
+    }
+
+    @Override
+    public List<Optional<User>> getUsers() {
+        var users = userDao.findAll();
+        if (users.isEmpty()) {
+            throw new UserDoesntExistsException("No users found");
+        }
+
+        return users.stream().map(Optional::of).toList();
     }
 
 

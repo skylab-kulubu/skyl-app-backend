@@ -53,10 +53,9 @@ public class AuthManager implements AuthService {
         user.setEnabled(false);
 
         user = userService.addUser(user);
-        if (user != null){
-            emailActivationService.sendActivationEmail(user);
+        if(user == null){
+            throw new NullPointerException("User cannot be null");
         }
-
     }
 
     private boolean CheckIfEmailValid(String email) {

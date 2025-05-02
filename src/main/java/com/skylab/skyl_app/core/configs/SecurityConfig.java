@@ -49,6 +49,7 @@ public class SecurityConfig {
                                 .requestMatchers("/urls/getOriginalUrl/**").permitAll()
                                 .requestMatchers("/urls/getUserUrls").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/urls/**").hasAnyRole("ADMIN")
+                                .requestMatchers("/users/**").hasAnyRole( "ADMIN")
 
 
                                 .anyRequest().permitAll()
