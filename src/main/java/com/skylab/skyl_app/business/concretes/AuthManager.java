@@ -50,7 +50,7 @@ public class AuthManager implements AuthService {
         user.setFirstName(registerDto.getFirstName());
         user.setLastName(registerDto.getLastName());
         user.setAuthorities(Set.of(Role.ROLE_USER));
-        user.setEnabled(false);
+        user.setEnabled(true);
 
         user = userService.addUser(user);
         if(user == null){
