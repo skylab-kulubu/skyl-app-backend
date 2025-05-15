@@ -52,7 +52,7 @@ public class UrlManager implements UrlService {
             throw new AliasAlreadyExistsException("Alias already exists");
         }
 
-        if(urlShortenDto.getAlias().isEmpty()){
+        if(urlShortenDto.getAlias() == null || urlShortenDto.getAlias().isEmpty()) {
             urlShortenDto.setAlias(generateRandomAlias());
         }
 
