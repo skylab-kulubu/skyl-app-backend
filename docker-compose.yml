@@ -2,27 +2,25 @@ version: '3.8'
 
 services:
   skyl-app:
+    container_name: skyl-app
     build: .
-    ports:
-      - "8080:8080"
     depends_on:
-      - db
+      - skyl-app-db
     networks:
-        - app-network
+      - nginx-network
 
-  db:
+  skyl-app-db:
     image: postgres:latest
+    container_name: skyl-app-db
     environment:
       POSTGRES_DB: skylappDB
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - "5432:5432"
+      POSTGRES_PASSWORD: postgres"
     volumes:
       - ./data:/var/lib/postgresql/data
     networks:
-        - app-network
+      - nginx-network
 
 networks:
-  app-network:
+  nginx-network:
     external: true
