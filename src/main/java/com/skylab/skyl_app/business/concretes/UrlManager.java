@@ -127,6 +127,10 @@ public class UrlManager implements UrlService {
             throw new UrlNotFoundException("You are not authorized to update this url");
         }
 
+        if (CheckIfAliasExists(urlShortenDto.getAlias())) {
+            throw new AliasAlreadyExistsException("Alias already exists");
+        }
+
         url.setAlias(urlShortenDto.getAlias().isEmpty() ? url.getAlias() : urlShortenDto.getAlias());
         url.setUrl(urlShortenDto.getUrl().isEmpty() ? url.getUrl() : urlShortenDto.getUrl());
 
