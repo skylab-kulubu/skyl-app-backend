@@ -10,6 +10,7 @@ public interface UrlService {
 
     Url redirect(String alias);
 
+    void deleteUrl(int urlId);
 
     Url shorten(UrlShortenDto urlShortenDto);
 

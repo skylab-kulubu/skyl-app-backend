@@ -23,6 +23,14 @@ public class UrlController {
         return ResponseEntity.ok(result);
     }
 
+    @DeleteMapping("/deleteUrl/{urlId}")
+    public ResponseEntity<?> deleteUrl(@PathVariable int urlId) {
+        urlService.deleteUrl(urlId);
+
+        return ResponseEntity.ok("Url deleted successfully");
+    }
+
+
     @PutMapping("/updateUrl/{urlId}")
     public ResponseEntity<?> updateUrl(@PathVariable int urlId, @RequestBody UrlShortenDto urlShortenDto) {
        var result = urlService.updateUrl(urlId, urlShortenDto);

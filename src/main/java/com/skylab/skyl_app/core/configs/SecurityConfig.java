@@ -48,6 +48,8 @@ public class SecurityConfig {
                                 .requestMatchers("/shorten").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/urls/getOriginalUrl/**").permitAll()
                                 .requestMatchers("/urls/getUserUrls").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("urls/deleteUrl/**").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("/urls/updateUrl/**").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/urls/**").hasAnyRole("ADMIN")
                                 .requestMatchers("/users/**").hasAnyRole( "ADMIN")
 

@@ -5,8 +5,8 @@ import com.skylab.skyl_app.business.abstracts.UserService;
 import com.skylab.skyl_app.core.exceptions.AliasAlreadyExistsException;
 import com.skylab.skyl_app.core.exceptions.UrlNotFoundException;
 import com.skylab.skyl_app.dataAccess.UrlDao;
+import com.skylab.skyl_app.entities.Role;
 import com.skylab.skyl_app.entities.Url;
-import com.skylab.skyl_app.entities.User;
 import com.skylab.skyl_app.entities.dtos.UrlShortenDto;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +41,29 @@ public class UrlManager implements UrlService {
         url.get().setClickCount(url.get().getClickCount() + 1);
 
         return urlDao.save(url.get());
+    }
+
+    @Override
+    public void deleteUrl(int urlId) {
+        var loggedInUser = userService.getLoggedInUser();
+        if (loggedInUser == null) {
+            throw new UrlNotFoundException("User not found");
+        }
+
+        var urlResult = urlDao.findById(urlId);
+        if (urlResult.isEmpty()) {
+            throw new UrlNotFoundException("Url not found");
+        }
+
+        var url = urlResult.get();
+        var isAdmin = loggedInUser.getAuthorities().contains(Role.ROLE_ADMIN);
+        var isOwner = url.getCreatedBy().equals(loggedInUser);
+
+        if (!isAdmin && !isOwner) {
+            throw new UrlNotFoundException("You are not authorized to delete this url");
+        }
+
+        urlDao.delete(url);
     }
 
     @Override
@@ -86,13 +109,23 @@ public class UrlManager implements UrlService {
 
     @Override
     public Url updateUrl(int urlId, UrlShortenDto urlShortenDto) {
-        var urlResult = urlDao.findById(urlId);
+        var loggedInUser = userService.getLoggedInUser();
+        if (loggedInUser == null) {
+            throw new UrlNotFoundException("User not found");
+        }
 
+        var urlResult = urlDao.findById(urlId);
         if (urlResult.isEmpty()) {
             throw new UrlNotFoundException("Url not found");
         }
 
         var url = urlResult.get();
+        var isAdmin = loggedInUser.getAuthorities().contains(Role.ROLE_ADMIN);
+        var isOwner = url.getCreatedBy().equals(loggedInUser);
+
+        if (!isAdmin && !isOwner) {
+            throw new UrlNotFoundException("You are not authorized to update this url");
+        }
 
         url.setAlias(urlShortenDto.getAlias().isEmpty() ? url.getAlias() : urlShortenDto.getAlias());
         url.setUrl(urlShortenDto.getUrl().isEmpty() ? url.getUrl() : urlShortenDto.getUrl());
