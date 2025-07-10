@@ -52,6 +52,7 @@ public class SecurityConfig {
                                 .requestMatchers("/urls/updateUrl/**").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/urls/**").hasAnyRole("ADMIN")
                                 .requestMatchers("/users/**").hasAnyRole( "ADMIN")
+                                .requestMatchers("/api/qrCodes/**").hasAnyRole("USER", "ADMIN")
 
 
                                 .anyRequest().permitAll()
