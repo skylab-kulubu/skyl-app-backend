@@ -5,6 +5,8 @@ import com.skylab.skyl_app.business.abstracts.UserService;
 import com.skylab.skyl_app.core.exceptions.UserDoesntExistsException;
 import com.skylab.skyl_app.dataAccess.UserDao;
 import com.skylab.skyl_app.entities.User;
+import com.skylab.skyl_app.entities.dtos.ChangePasswordDto;
+import com.skylab.skyl_app.entities.dtos.RegisterDto;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -96,6 +98,19 @@ public class UserManager implements UserService {
         }
 
         return users.stream().map(Optional::of).toList();
+    }
+
+    @Override
+    public void changePassword(ChangePasswordDto changePasswordDto) {
+        var user = getLoggedInUser();
+
+        if (!passwordEncoder.matches(changePasswordDto.getOldPassword(), user.getPassword())) {
+            throw new UserDoesntExistsException("Old password is not correct"); //change exception later
+        }
+
+        user.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
+        userDao.save(user);
+
     }
 
 

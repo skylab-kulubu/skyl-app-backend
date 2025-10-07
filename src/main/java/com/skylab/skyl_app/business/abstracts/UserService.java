@@ -1,6 +1,8 @@
 package com.skylab.skyl_app.business.abstracts;
 
 import com.skylab.skyl_app.entities.User;
+import com.skylab.skyl_app.entities.dtos.ChangePasswordDto;
+import com.skylab.skyl_app.entities.dtos.RegisterDto;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
@@ -24,4 +26,5 @@ public interface UserService extends UserDetailsService {
 
     List<Optional<User>> getUsers();
 
+    void changePassword(ChangePasswordDto changePasswordDto);
 }

@@ -2,6 +2,7 @@ package com.skylab.skyl_app.api.controllers;
 
 import com.skylab.skyl_app.business.abstracts.UserService;
 import com.skylab.skyl_app.entities.User;
+import com.skylab.skyl_app.entities.dtos.ChangePasswordDto;
 import com.skylab.skyl_app.entities.dtos.RegisterDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,12 @@ public class UserController {
     public ResponseEntity<List<Optional<User>>> getAllUsers() {
         List<Optional<User>> users = userService.getUsers();
         return ResponseEntity.ok(users);
+    }
+
+    @PostMapping("/changePassword")
+    public ResponseEntity changePassword(@RequestBody ChangePasswordDto changePasswordDto) {
+        userService.changePassword(changePasswordDto);
+        return ResponseEntity.status(200).build();
     }
 
 }
