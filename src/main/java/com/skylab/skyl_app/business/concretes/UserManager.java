@@ -3,6 +3,7 @@ package com.skylab.skyl_app.business.concretes;
 import com.skylab.skyl_app.business.abstracts.EmailActivationService;
 import com.skylab.skyl_app.business.abstracts.UserService;
 import com.skylab.skyl_app.core.exceptions.UserDoesntExistsException;
+import com.skylab.skyl_app.core.exceptions.ValidationException;
 import com.skylab.skyl_app.dataAccess.UserDao;
 import com.skylab.skyl_app.entities.User;
 import com.skylab.skyl_app.entities.dtos.ChangePasswordDto;
@@ -105,7 +106,7 @@ public class UserManager implements UserService {
         var user = getLoggedInUser();
 
         if (!passwordEncoder.matches(changePasswordDto.getOldPassword(), user.getPassword())) {
-            throw new UserDoesntExistsException("Old password is not correct"); //change exception later
+            throw new ValidationException("Old password is not correct");
         }
 
         user.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
