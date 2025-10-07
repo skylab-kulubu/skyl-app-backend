@@ -8,6 +8,7 @@ import com.skylab.skyl_app.dataAccess.UrlDao;
 import com.skylab.skyl_app.entities.Role;
 import com.skylab.skyl_app.entities.Url;
 import com.skylab.skyl_app.entities.dtos.UrlShortenDto;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -71,7 +72,7 @@ public class UrlManager implements UrlService {
 
         var loggedInUser = userService.getLoggedInUser();
 
-        if (CheckIfAliasExists(urlShortenDto.getAlias())) {
+        if (checkIfAliasExists(urlShortenDto.getAlias())) {
             throw new AliasAlreadyExistsException("Alias already exists");
         }
 
@@ -111,7 +112,7 @@ public class UrlManager implements UrlService {
     public Url updateUrl(int urlId, UrlShortenDto urlShortenDto) {
         var loggedInUser = userService.getLoggedInUser();
         if (loggedInUser == null) {
-            throw new UrlNotFoundException("User not found");
+            throw new UsernameNotFoundException("User not found");
         }
 
         var urlResult = urlDao.findById(urlId);
@@ -127,7 +128,7 @@ public class UrlManager implements UrlService {
             throw new UrlNotFoundException("You are not authorized to update this url");
         }
 
-        if (CheckIfAliasExists(urlShortenDto.getAlias())) {
+        if (checkIfAliasExistsExceptCurrent(urlShortenDto.getAlias(), urlId)) {
             throw new AliasAlreadyExistsException("Alias already exists");
         }
 
@@ -159,14 +160,19 @@ public class UrlManager implements UrlService {
             alias += characters.charAt(index);
         }
 
-        if (CheckIfAliasExists(alias)) {
+        if (checkIfAliasExists(alias)) {
             return generateRandomAlias();
         }
 
         return alias;
     }
 
-    private boolean CheckIfAliasExists(String alias) {
+    private boolean checkIfAliasExists(String alias) {
         return urlDao.findByAlias(alias).isPresent();
+    }
+
+    private boolean checkIfAliasExistsExceptCurrent(String alias, int urlId) {
+        var url = urlDao.findByAlias(alias);
+        return url.isPresent() && url.get().getId() != urlId;
     }
 }
