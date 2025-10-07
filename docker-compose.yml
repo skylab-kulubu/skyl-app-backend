@@ -3,6 +3,7 @@ version: '3.8'
 services:
   skyl-app:
     container_name: skyl-app
+    restart: unless-stopped
     build: .
     depends_on:
       - skyl-app-db
@@ -11,6 +12,7 @@ services:
 
   skyl-app-db:
     image: postgres:latest
+    restart: unless-stopped
     container_name: skyl-app-db
     environment:
       POSTGRES_DB: skylappDB
